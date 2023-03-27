@@ -13,20 +13,34 @@ class App extends Component {
         profession: 'Developer',
       },
       shows: false,
-      intervalId: null,
       elapsedTime: 0,
     };
   }
 
   componentDidMount() {
-    const intervalId = setInterval(() => {
-      this.setState({ elapsedTime: this.state.elapsedTime + 1 });
-    }, 1000);
-    this.setState({ intervalId });
+    this.startTimer();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.shows !== this.state.shows) {
+      this.resetTimer();
+      this.startTimer();
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    clearInterval(this.intervalId);
+  }
+
+  startTimer() {
+    this.intervalId = setInterval(() => {
+      this.setState({ elapsedTime: this.state.elapsedTime + 1 });
+    }, 1000);
+  }
+
+  resetTimer() {
+    this.setState({ elapsedTime: 0 });
+    clearInterval(this.intervalId);
   }
 
   render() {
